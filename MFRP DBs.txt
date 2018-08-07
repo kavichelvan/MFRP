@@ -1,0 +1,94 @@
+CREATE TABLE login (
+    user_id int(10)  PRIMARY KEY NOT NULL ,
+    password VARCHAR(30)  NOT NULL ,
+    status VARCHAR(30) DEFAULT 'Active' NOT NULL ,
+    role VARCHAR(30)  DEFAULT 'User'  NOT NULL,
+    count int(10) DEFAULT 0  NOT NULL
+);
+
+
+INSERT INTO login (user_id,password,status,role) VALUES (1100, '25$NPNebe' , 'Active' ,'Admin' ) ;
+
+
+INSERT INTO login (user_id,password,status,role) VALUES (1101, 'pssword' , 'Inactive' ,'User' ) ;
+
+
+CREATE TABLE user_details (
+    user_id int(10)  PRIMARY KEY NOT NULL ,
+    first_name VARCHAR(50)  NOT NULL ,
+    middle_name VARCHAR(50),
+    last_name VARCHAR(50)  NOT NULL ,    
+    sex varchar(5)  NOT NULL ,
+    dob Date NOT NULL,
+    qualification VARCHAR(30)  NOT NULL ,
+    annual_income Double(20,2)  NOT NULL ,
+    address VARCHAR(300)  NOT NULL ,    
+    phone_number VARCHAR (20)  NOT NULL ,
+    mobile_number VARCHAR (20) NOT NULL,
+    mail_id VARCHAR(30)  NOT NULL ,
+    constraint a FOREIGN KEY(user_id) references login(user_id) ON DELETE CASCADE ON UPDATE CASCADE
+
+);
+
+INSERT INTO user_details (user_id,first_name,middle_name,last_name,sex,dob,qualification,annual_income,address,phone_number,mobile_number,mail_id) VALUES (1100 , 'Bala' ,'Murugan', 'P' , 'M' , '1996-05-19' , 'B.E Mech' , 380000.00 , '297,Jeevanagar 1st Street,Jaihindpuram,Madurai-11', '0452-4366649' , '+918807576988' , 'arjun.may1996@gmail.com' ) ;
+
+INSERT INTO user_details (user_id,first_name,middle_name,last_name,sex,dob,qualification,annual_income,address,phone_number,mobile_number,mail_id) VALUES (1101, 'Suresh' ,'Kasi', 'Nathan' , 'M' , '1996-10-14' , 'B.E ECE' , 480000.00 , '197,Jeevanagar 1st Street,Jaihindpuram,Madurai-17', '0452-2341104' , '+919790270731' , 'Suresh@gmail.com' ) ;
+
+
+create table claim_type (
+claim_type_id varchar(10) PRIMARY KEY,
+name VARCHAR(30) NOT NULL
+);
+
+
+Insert into claim_type (claim_type_id,name) values ('1',’Accident’);
+Insert into claim_type (claim_type_id,name) values ('2',’Illness’);
+Insert into claim_type (claim_type_id,name) values ('3',’ENT’);
+Insert into claim_type (claim_type_id,name) values ('4',’Others’); 
+
+
+
+
+
+CREATE TABLE claim_status(
+      claim_status_id varchar(10) PRIMARY KEY NOT NULL,
+      status_type varchar(30) NOT NULL
+      
+);
+
+
+Insert into claim_status (claim_status_id,status_type) values ('1',’Pending’);
+Insert into claim_status (claim_status_id,status_type) values ('2',’Approved’);
+Insert into claim_status (claim_status_id,status_type) values ('3',’Rejected’); 
+
+
+
+
+CREATE TABLE claim_details(
+claim_id int(20) NOT NULL,
+user_id int(10) NOT NULL,
+claim_description VARCHAR(100) NOT NULL,
+claim_date DATE NOT NULL,
+PRIMARY KEY(claim_id),
+constraint b FOREIGN KEY(user_id) REFERENCES login(user_id)
+); 
+
+
+Insert into claim_details (claim_id,user_id,claim_description,claim_date) values (1,1100,'Bike accident','2018-03-29');
+Insert into claim_details (claim_id,user_id,claim_description,claim_date) values (2,1101,'Cancer','2018-01-29');
+
+CREATE TABLE claims(
+claim_id int(20) NOT NULL,
+claim_type_id VARCHAR(20) NOT NULL,
+claim_amount double(50,2) NOT NULL,
+claim_status_id VARCHAR(10) DEFAULT 1 NOT NULL ,
+PRIMARY KEY(claim_id,claim_type_id),
+constraint c FOREIGN KEY(claim_id) REFERENCES claim_details(claim_id),
+constraint d FOREIGN KEY(claim_type_id) references claim_type(claim_type_id),
+constraint e FOREIGN KEY(claim_status_id) references claim_status(claim_status_id)
+);
+
+
+Insert into claims (claim_id,claim_type_id,claim_amount,claim_status_id)  values (1,'1',1000.0,'1');
+Insert into claims(claim_id,claim_type_id,claim_amount,claim_status_id)  values (2,'2',10000.0,'2'); 
+
